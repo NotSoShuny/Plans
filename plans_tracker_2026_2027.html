@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#f5f3ef">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<title>Планы 2026–2027</title>
+<style>
+:root{
+  --bg:#f5f3ef; --card:#fffdf9; --text:#252525; --muted:#8b8984;
+  --line:#e8e3dc; --accent:#7c6be8; --accent-soft:#eeeafd;
+  --danger:#d85b63; --shadow:0 14px 40px rgba(38,30,20,.08);
+}
+*{box-sizing:border-box}
+html{background:var(--bg);scroll-behavior:smooth}
+body{
+  margin:0;color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"SF Pro Display","SF Pro Text","Segoe UI",sans-serif;
+  background:var(--bg);min-height:100vh;
+}
+button,input,textarea{font:inherit}
+button{border:0;cursor:pointer}
+.app{width:min(1120px,100%);margin:0 auto;padding:calc(20px + env(safe-area-inset-top)) 20px calc(34px + env(safe-area-inset-bottom))}
+.topbar{display:flex;align-items:center;justify-content:space-between;gap:16px;margin-bottom:18px}
+.brand{display:flex;align-items:center;gap:12px}
+.logo{width:44px;height:44px;border-radius:14px;display:grid;place-items:center;background:var(--accent);color:#fff;font-size:21px;box-shadow:0 8px 20px color-mix(in srgb,var(--accent) 30%,transparent)}
+.brand h1{font-size:21px;margin:0;font-weight:760;letter-spacing:-.5px}
+.brand p{margin:2px 0 0;color:var(--muted);font-size:12px}
+.today-btn{background:var(--card);color:var(--text);border:1px solid var(--line);padding:11px 14px;border-radius:13px;font-weight:650}
+.month-head{display:flex;align-items:center;justify-content:space-between;margin:8px 0 16px}
+.month-title{font-size:30px;letter-spacing:-1.2px;font-weight:800}
+.month-title span{display:block;font-size:13px;color:var(--muted);font-weight:600;letter-spacing:0;margin-top:2px}
+.nav{display:flex;gap:8px}
+.nav button{width:42px;height:42px;border-radius:13px;background:var(--card);border:1px solid var(--line);font-size:21px;color:var(--text)}
+.calendar{
+  background:var(--card);border:1px solid var(--line);border-radius:24px;box-shadow:var(--shadow);overflow:hidden;
+}
+.weekdays{display:grid;grid-template-columns:repeat(7,1fr);padding:13px 10px 10px;border-bottom:1px solid var(--line)}
+.weekdays div{text-align:center;font-size:11px;font-weight:750;color:var(--muted);text-transform:uppercase}
+.grid{display:grid;grid-template-columns:repeat(7,1fr)}
+.day{
+  min-height:132px;padding:10px;border-right:1px solid var(--line);border-bottom:1px solid var(--line);
+  position:relative;background:transparent;transition:.15s;
+}
+.day:nth-child(7n){border-right:0}
+.day:hover{background:color-mix(in srgb,var(--accent) 4%,transparent)}
+.day.muted{background:#faf8f4;color:#b6b1aa}
+.day-number{display:flex;align-items:center;justify-content:space-between;margin-bottom:7px}
+.num{font-size:13px;font-weight:760;width:28px;height:28px;display:grid;place-items:center;border-radius:9px}
+.today .num{background:var(--accent);color:#fff}
+.add{opacity:0;width:26px;height:26px;border-radius:8px;background:var(--accent-soft);color:var(--accent);font-size:18px;transition:.15s}
+.day:hover .add{opacity:1}
+.events{display:flex;flex-direction:column;gap:5px}
+.event{
+  border-radius:8px;padding:5px 7px;font-size:11px;line-height:1.2;font-weight:620;
+  background:var(--accent-soft);color:var(--accent);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:pointer;
+}
+.event.done{text-decoration:line-through;opacity:.5}
+.mobile-hint{display:none;color:var(--muted);font-size:12px;margin:12px 3px 0}
+.overlay{position:fixed;inset:0;background:rgba(20,18,16,.38);backdrop-filter:blur(7px);z-index:20;display:none;align-items:flex-end;justify-content:center}
+.overlay.open{display:flex}
+.modal{
+  width:min(560px,100%);background:var(--card);border-radius:26px 26px 0 0;padding:20px 20px calc(20px + env(safe-area-inset-bottom));
+  box-shadow:0 -20px 60px rgba(0,0,0,.18);animation:up .22s ease;
+}
+@keyframes up{from{transform:translateY(30px);opacity:.7}to{transform:none;opacity:1}}
+.modal-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:14px}
+.modal h2{font-size:19px;margin:0}
+.close{width:34px;height:34px;border-radius:50%;background:#f0ede8;font-size:20px;color:#555}
+.field{margin:11px 0}
+label{display:block;font-size:12px;color:var(--muted);font-weight:700;margin:0 0 6px}
+input,textarea{
+  width:100%;border:1px solid var(--line);background:#faf8f4;border-radius:13px;padding:12px 13px;outline:none;color:var(--text);
+}
+input:focus,textarea:focus{border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-soft)}
+textarea{min-height:80px;resize:vertical}
+.actions{display:flex;gap:8px;margin-top:15px}
+.primary,.secondary,.delete{
+  flex:1;padding:12px;border-radius:13px;font-weight:750
+}
+.primary{background:var(--accent);color:white}
+.secondary{background:#f0ede8;color:var(--text)}
+.delete{background:#fff0f0;color:var(--danger)}
+.event-list{margin-top:12px}
+.event-row{display:flex;gap:9px;align-items:center;padding:9px 0;border-top:1px solid var(--line)}
+.check{width:22px;height:22px;border-radius:7px;border:1.5px solid #cfc8be;background:transparent;flex:none}
+.check.checked{background:var(--accent);border-color:var(--accent);color:white}
+.event-info{flex:1;min-width:0}
+.event-info strong{display:block;font-size:13px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.event-info small{display:block;color:var(--muted);font-size:11px;margin-top:2px;white-space:pre-wrap}
+.row-actions{display:flex;gap:5px}
+.icon-btn{width:31px;height:31px;border-radius:9px;background:#f0ede8;color:#555}
+.empty{font-size:12px;color:var(--muted);padding:10px 0}
+.toast{position:fixed;left:50%;bottom:calc(20px + env(safe-area-inset-bottom));transform:translateX(-50%) translateY(20px);opacity:0;pointer-events:none;background:#272522;color:white;padding:10px 14px;border-radius:12px;font-size:12px;z-index:50;transition:.2s}
+.toast.show{opacity:1;transform:translateX(-50%)}
+@media(max-width:700px){
+  .app{padding-left:12px;padding-right:12px}
+  .topbar{margin-bottom:12px}
+  .brand h1{font-size:19px}
+  .today-btn{padding:9px 11px;font-size:12px}
+  .month-title{font-size:26px}
+  .calendar{border-radius:20px}
+  .weekdays{padding:10px 3px 8px}
+  .weekdays div{font-size:9px}
+  .day{min-height:94px;padding:6px 4px}
+  .num{font-size:11px;width:25px;height:25px}
+  .add{opacity:1;width:24px;height:24px;font-size:16px}
+  .event{font-size:9px;padding:4px 5px;border-radius:6px}
+  .mobile-hint{display:block}
+}
+@media(max-width:390px){
+  .day{min-height:82px}
+  .event{font-size:8px}
+  .month-title{font-size:24px}
+  .brand p{display:none}
+}
+@media(min-width:701px){
+  .overlay{align-items:center}
+  .modal{border-radius:24px;padding-bottom:20px}
+}
+</style>
+</head>
+<body>
+<div class="app">
+  <header class="topbar">
+    <div class="brand">
+      <div class="logo">✓</div>
+      <div><h1>Мои планы</h1><p>Сентябрь 2026 — декабрь 2027</p></div>
+    </div>
+    <button class="today-btn" id="todayBtn">Сегодня</button>
+  </header>
+
+  <section class="month-head">
+    <div class="month-title" id="monthTitle"></div>
+    <div class="nav">
+      <button id="prev" aria-label="Предыдущий месяц">‹</button>
+      <button id="next" aria-label="Следующий месяц">›</button>
+    </div>
+  </section>
+
+  <main class="calendar">
+    <div class="weekdays">
+      <div>Пн</div><div>Вт</div><div>Ср</div><div>Чт</div><div>Пт</div><div>Сб</div><div>Вс</div>
+    </div>
+    <div class="grid" id="grid"></div>
+  </main>
+  <div class="mobile-hint">Нажмите «+» у даты, чтобы добавить план. Нажмите на событие для изменения.</div>
+</div>
+
+<div class="overlay" id="overlay">
+  <div class="modal">
+    <div class="modal-head">
+      <h2 id="modalTitle">Планы на день</h2>
+      <button class="close" id="close">×</button>
+    </div>
+    <div class="field">
+      <label>ДАТА</label>
+      <input id="dateField" type="text" readonly>
+    </div>
+    <div class="event-list" id="eventList"></div>
+    <div class="field">
+      <label id="editLabel">НОВЫЙ ПЛАН</label>
+      <input id="eventTitle" type="text" maxlength="100" placeholder="Например: подготовить презентацию">
+    </div>
+    <div class="field">
+      <label>ПОДРОБНОСТИ</label>
+      <textarea id="eventNote" maxlength="500" placeholder="Необязательно"></textarea>
+    </div>
+    <div class="actions">
+      <button class="secondary" id="cancelEdit">Очистить</button>
+      <button class="primary" id="save">Добавить план</button>
+    </div>
+    <div class="actions" id="deleteWrap" style="display:none">
+      <button class="delete" id="delete">Удалить выбранный план</button>
+    </div>
+  </div>
+</div>
+<div class="toast" id="toast"></div>
+
+<script>
+const months = [
+  {y:2026,m:8,name:"Сентябрь",color:"#7c6be8",soft:"#eeeafd"},
+  {y:2026,m:9,name:"Октябрь",color:"#e47745",soft:"#fbe9df"},
+  {y:2026,m:10,name:"Ноябрь",color:"#3d8f86",soft:"#e1f1ee"},
+  {y:2026,m:11,name:"Декабрь",color:"#4975b8",soft:"#e5edf9"},
+  {y:2027,m:0,name:"Январь",color:"#5f7eb9",soft:"#e8eef8"},
+  {y:2027,m:1,name:"Февраль",color:"#b55d85",soft:"#f5e6ee"},
+  {y:2027,m:2,name:"Март",color:"#5d9b61",soft:"#e6f2e6"},
+  {y:2027,m:3,name:"Апрель",color:"#d17a3e",soft:"#f8eadf"},
+  {y:2027,m:4,name:"Май",color:"#5d9a83",soft:"#e5f2ed"},
+  {y:2027,m:5,name:"Июнь",color:"#4b91b4",soft:"#e5f1f7"},
+  {y:2027,m:6,name:"Июль",color:"#d36a52",soft:"#f8e8e3"},
+  {y:2027,m:7,name:"Август",color:"#c48a3a",soft:"#f8efdf"},
+  {y:2027,m:8,name:"Сентябрь",color:"#8a6cc7",soft:"#eee8f8"},
+  {y:2027,m:9,name:"Октябрь",color:"#db7045",soft:"#f9e8df"},
+  {y:2027,m:10,name:"Ноябрь",color:"#4e8e89",soft:"#e4f1ef"},
+  {y:2027,m:11,name:"Декабрь",color:"#5c77b1",soft:"#e7ecf7"}
+];
+let monthIndex = 0;
+let selectedDate = null;
+let editingId = null;
+let events = JSON.parse(localStorage.getItem("plans-2026-2027") || "{}");
+
+const $ = id => document.getElementById(id);
+function key(y,m,d){ return `${y}-${String(m+1).padStart(2,"0")}-${String(d).padStart(2,"0")}`; }
+function saveStorage(){ localStorage.setItem("plans-2026-2027",JSON.stringify(events)); }
+function pad(n){return String(n).padStart(2,"0")}
+function monthDays(y,m){return new Date(y,m+1,0).getDate()}
+function mondayIndex(y,m,d){let x=new Date(y,m,d).getDay();return (x+6)%7}
+function applyTheme(){
+  const t=months[monthIndex];
+  document.documentElement.style.setProperty("--accent",t.color);
+  document.documentElement.style.setProperty("--accent-soft",t.soft);
+  document.querySelector('meta[name="theme-color"]').setAttribute("content",t.soft);
+}
+function render(){
+  applyTheme();
+  const {y,m,name}=months[monthIndex];
+  $("monthTitle").innerHTML = `${name} <span>${y}</span>`;
+  const grid=$("grid"); grid.innerHTML="";
+  const first=mondayIndex(y,m,1), days=monthDays(y,m);
+  const prevDays=monthDays(y,m-1);
+  const total=Math.ceil((first+days)/7)*7;
+  const today=new Date(); const todayKey=key(today.getFullYear(),today.getMonth(),today.getDate());
+  for(let i=0;i<total;i++){
+    let d=i-first+1, yy=y, mm=m, muted=false;
+    if(d<1){d=prevDays+d; mm=m-1; if(mm<0){mm=11;yy--} muted=true}
+    else if(d>days){d=d-days; mm=m+1; if(mm>11){mm=0;yy++} muted=true}
+    const k=key(yy,mm,d);
+    const cell=document.createElement("div");
+    cell.className="day"+(muted?" muted ":"")+(k===todayKey?" today":"");
+    const plans=events[k]||[];
+    cell.innerHTML=`<div class="day-number"><span class="num">${d}</span><button class="add" aria-label="Добавить план">+</button></div><div class="events"></div>`;
+    const list=cell.querySelector(".events");
+    plans.forEach(ev=>{
+      const el=document.createElement("div");
+      el.className="event"+(ev.done?" done":"");
+      el.textContent=ev.title;
+      el.title=ev.note||ev.title;
+      el.onclick=(e)=>{e.stopPropagation();openModal(k,ev.id)};
+      list.appendChild(el);
+    });
+    cell.querySelector(".add").onclick=(e)=>{e.stopPropagation();openModal(k,null)};
+    cell.onclick=()=>openModal(k,null);
+    grid.appendChild(cell);
+  }
+}
+function formatDate(k){
+  const [y,m,d]=k.split("-").map(Number);
+  const date=new Date(y,m-1,d);
+  return date.toLocaleDateString("ru-RU",{weekday:"long",day:"numeric",month:"long",year:"numeric"});
+}
+function openModal(k,id){
+  selectedDate=k; editingId=id;
+  $("overlay").classList.add("open");
+  $("dateField").value=formatDate(k);
+  $("modalTitle").textContent="Планы на день";
+  $("eventTitle").value=""; $("eventNote").value="";
+  $("editLabel").textContent=id?"РЕДАКТИРОВАНИЕ":"НОВЫЙ ПЛАН";
+  $("save").textContent=id?"Сохранить изменения":"Добавить план";
+  $("deleteWrap").style.display=id?"flex":"none";
+  if(id){
+    const ev=(events[k]||[]).find(x=>x.id===id);
+    if(ev){$("eventTitle").value=ev.title;$("eventNote").value=ev.note||""}
+  }
+  renderEventList();
+  setTimeout(()=>$("eventTitle").focus(),120);
+}
+function renderEventList(){
+  const list=$("eventList"); list.innerHTML="";
+  const plans=events[selectedDate]||[];
+  if(!plans.length){list.innerHTML='<div class="empty">Пока нет планов на этот день.</div>';return}
+  plans.forEach(ev=>{
+    const row=document.createElement("div"); row.className="event-row";
+    row.innerHTML=`<button class="check ${ev.done?"checked":""}">${ev.done?"✓":""}</button><div class="event-info"><strong>${escapeHtml(ev.title)}</strong>${ev.note?`<small>${escapeHtml(ev.note)}</small>`:""}</div><div class="row-actions"><button class="icon-btn edit-row">✎</button></div>`;
+    row.querySelector(".check").onclick=()=>{
+      ev.done=!ev.done;saveStorage();render();renderEventList();
+    };
+    row.querySelector(".edit-row").onclick=()=>openModal(selectedDate,ev.id);
+    list.appendChild(row);
+  });
+}
+function escapeHtml(s){return s.replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[c]))}
+function resetEdit(){
+  editingId=null;$("eventTitle").value="";$("eventNote").value="";
+  $("editLabel").textContent="НОВЫЙ ПЛАН";$("save").textContent="Добавить план";$("deleteWrap").style.display="none";
+}
+$("save").onclick=()=>{
+  const title=$("eventTitle").value.trim();
+  if(!title){$("eventTitle").focus();showToast("Введите название плана");return}
+  events[selectedDate] ||= [];
+  if(editingId){
+    const ev=events[selectedDate].find(x=>x.id===editingId);
+    if(ev){ev.title=title;ev.note=$("eventNote").value.trim()}
+    showToast("План изменён");
+  }else{
+    events[selectedDate].push({id:crypto.randomUUID?crypto.randomUUID():Date.now().toString(),title,note:$("eventNote").value.trim(),done:false});
+    showToast("План добавлен");
+  }
+  saveStorage();render();renderEventList();resetEdit();
+};
+$("delete").onclick=()=>{
+  if(!editingId)return;
+  events[selectedDate]=(events[selectedDate]||[]).filter(x=>x.id!==editingId);
+  if(!events[selectedDate].length)delete events[selectedDate];
+  saveStorage();render();renderEventList();resetEdit();showToast("План удалён");
+};
+$("cancelEdit").onclick=resetEdit;
+$("close").onclick=()=>{$("overlay").classList.remove("open");resetEdit()};
+$("overlay").onclick=e=>{if(e.target===$("overlay")){$("overlay").classList.remove("open");resetEdit()}};
+$("prev").onclick=()=>{if(monthIndex>0){monthIndex--;render()}};
+$("next").onclick=()=>{if(monthIndex<months.length-1){monthIndex++;render()}};
+$("todayBtn").onclick=()=>{
+  const now=new Date(), idx=months.findIndex(x=>x.y===now.getFullYear()&&x.m===now.getMonth());
+  if(idx>=0){monthIndex=idx;render()}else showToast("Сегодня вне диапазона трекера");
+};
+function showToast(t){const x=$("toast");x.textContent=t;x.classList.add("show");clearTimeout(window._toast);window._toast=setTimeout(()=>x.classList.remove("show"),1500)}
+document.addEventListener("keydown",e=>{if(e.key==="Escape")$("close").click()});
+render();
+</script>
+</body>
+</html>
